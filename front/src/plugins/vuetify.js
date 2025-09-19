@@ -13,7 +13,7 @@ export default createVuetify({
             customTheme: {
                 dark: false,
                 colors: {
-                    primary: '#0952c7',      // button color
+                    primary: '#151515',      // button color
                     secondary: '#00D4FF',    // Base color from gradient
                     background: '#27109C',   // background
                     surface: '#FFFFFF',

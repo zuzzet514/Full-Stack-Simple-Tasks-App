@@ -1,22 +1,16 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useTasksStore } from '@/stores/tasks'
 import TaskCard from '@/components/tasks/TaskCard.vue'
+import AddTaskForm from '@/components/tasks/AddTaskForm.vue'
+import Navbar from "@/components/Navbar.vue";
 
 const tasksStore = useTasksStore()
-const newTaskTitle = ref('')
 
 // Fetch tasks when the page loads
 onMounted(async () => {
   await tasksStore.fetchTasks()
 })
-
-// Add new task
-const addTask = async () => {
-  if (newTaskTitle.value.trim() === '') return
-  await tasksStore.addTask({ title: newTaskTitle.value, status: false })
-  newTaskTitle.value = ''
-}
 
 // Background style
 const appStyle = computed(() => ({
@@ -28,25 +22,22 @@ const appStyle = computed(() => ({
 
 <template>
   <v-app :style="appStyle">
-    <v-container fluid>
+    <Navbar/>
+
+
+
+    <v-container fluid style="padding-top: 80px;">
+
       <v-row justify="center">
         <v-col cols="12" sm="8" md="6">
-          <!-- New Task Input -->
-          <v-text-field
-              v-model="newTaskTitle"
-              label="New Task"
-              outlined
-              dense
-              hide-details
-              @keyup.enter="addTask"
-          />
-          <v-btn class="mb-4" color="primary" @click="addTask">Add Task</v-btn>
+          <!-- Add Task Form -->
+          <AddTaskForm />
 
           <!-- Task List -->
           <div v-if="tasksStore.tasks.length">
             <TaskCard
                 v-for="task in tasksStore.tasks"
-                :key="task.id"
+                :key="task._id"
                 :task="task"
             />
           </div>
