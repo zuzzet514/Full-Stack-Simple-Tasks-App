@@ -19,7 +19,7 @@ export const authApi = {
         }
     },
 
-    signup: async (userData) => {
+    register: async (userData) => {
         try {
             const response = await api.post('/auth/register', userData);
             return response.data;

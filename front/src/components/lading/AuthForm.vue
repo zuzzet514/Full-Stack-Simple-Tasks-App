@@ -1,6 +1,10 @@
 <script setup>
 import { ref, reactive } from 'vue';
 
+const showPassword = ref(false);
+const showConfirmPassword = ref(false);
+const errorMessage = ref('');
+
 const props = defineProps({
   isSignup: Boolean
 });
@@ -14,7 +18,14 @@ const formData = reactive({
 });
 
 const submitForm = () => {
-  emit('submit', { ...formData });
+  errorMessage.value = '';
+
+  if (props.isSignup && formData.password !== formData.confirmPassword) {
+    errorMessage.value = 'Passwords do not match';
+    return;
+  }
+
+  emit('submit', { username: formData.username, password: formData.password });
 
   // Reset form
   formData.username = '';
@@ -36,21 +47,27 @@ const submitForm = () => {
 
     <v-text-field
         v-model="formData.password"
+        :type="showPassword ? 'text' : 'password'"
         label="Password"
-        type="password"
         required
         variant="outlined"
         class="mb-4"
+        :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+        @click:append-inner="showPassword = !showPassword"
     ></v-text-field>
 
     <v-text-field
-        v-if="isSignup"
+        v-if="props.isSignup"
         v-model="formData.confirmPassword"
+        :type="showConfirmPassword ? 'text' : 'password'"
         label="Confirm Password"
-        type="password"
         required
         variant="outlined"
         class="mb-4"
+        :append-inner-icon="showConfirmPassword ? 'mdi-eye-off' : 'mdi-eye'"
+        @click:append-inner="showConfirmPassword = !showConfirmPassword"
+        :error="!!errorMessage"
+        :error-messages="errorMessage"
     ></v-text-field>
 
     <v-btn
