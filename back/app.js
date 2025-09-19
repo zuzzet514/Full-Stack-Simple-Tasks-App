@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from "mongoose";
 import dotenv from 'dotenv';
 import routes from './routes/index.js';
+import cors from 'cors'
 
 // .env config
 dotenv.config();
@@ -10,8 +11,18 @@ dotenv.config();
 const app = express()
 const port = 3000
 
+app.use(express.json())
+
 // Middleware to parse JSON
 app.use(express.json());
+
+// cors config
+app.use(cors({
+    origin: '*', // change when front deployed
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}))
+
 
 // routes config
 app.use('/api', routes);
